@@ -1,10 +1,13 @@
 import './App.css'
+import Library from './pages/Library.jsx'
+import Navbar from './components/Navbar.jsx'
 
 function App() {
 
   return (
     <>
-      <h1 className='text-8xl'>TEST</h1>
+      <Navbar />
+      <Library />
     </>
   )
 }
