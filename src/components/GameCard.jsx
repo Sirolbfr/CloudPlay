@@ -1,25 +1,37 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function GameCard({ id = 730 }) {
+export default function GameCard({ slug = 'rocket-league' }) {
   const API_KEY = import.meta.env.VITE_API_KEY;
-  console.log(API_KEY);
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    axios
-      .get(`https://store.steampowered.com/api/appdetails?appids=${id}`, {
-        header: { "Access-Control-Allow-Origin": "*" },
-        "Access-Control-Allow-Credentials": false,
+  const [data, setData] = useState();
+  
+  async function getData() {
+    try {
+      const test = await axios.get(`https://api.rawg.io/api/games?search=${slug}?apikey=${API_KEY}`, {
+        params : {search: slug, key: API_KEY}
       })
-      .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
-  }, [id]);
+      setData(test.data.results[0])
+      // console.log(data);
+    }
+    catch (err) {console.error(err);}
+  }
+
+  
+
+  useEffect(() => {getData();}, [slug]);
+
+  useEffect(() => {console.log(data);}, [data]);
+    
+    
 
   return (
     <div>
-      <h3>Game ID: {id}</h3>
-      {data && data[id].success && <p>{data[id].data.name}</p>}
+      {data && 
+        <>
+          <p>{slug} : {data.name}</p>
+          <img src={data.background_image} alt={data.name} className="h-64"/>
+        </>
+      }
     </div>
   );
 }
